@@ -1,12 +1,12 @@
 package entities
 
 type User struct {
-	UserID   int
-	Name     string
-	Email    string
-	Password string
+	ID   int    `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string 
 }
 
-func (t *User) TablName() string {
+func (t *User) TableName() string {
 	return "users"
 }

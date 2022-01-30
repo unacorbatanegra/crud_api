@@ -7,34 +7,35 @@ import (
 
 type UserPostgresRepositoryInterface interface {
 	GetAll() []entities.User
-	GetById(id uint) entities.User
-	FindByName(name string) entities.User
+	GetById(id uint) (entities.User, error)
+	FindByName(name string) (entities.User, error)
 }
 
 type userPostgresRepository struct {
-	DB db.PostgresDB
+	db db.PostgresDB
 }
 
 func NewPostgresRepository(DB db.PostgresDB) UserPostgresRepositoryInterface {
 	return &userPostgresRepository{
-		DB: DB,
+		db: DB,
 	}
 }
 
 func (c *userPostgresRepository) GetAll() []entities.User {
 	var users []entities.User
-	c.DB.DB().Find(&users)
+	c.db.DB().Find(&users)
 	return users
 }
 
-func (c *userPostgresRepository) GetById(id uint) entities.User {
+func (c *userPostgresRepository) GetById(id uint) (entities.User, error) {
 	var user entities.User
-	c.DB.DB().First(&user, id)
-	return user
+	err := c.db.DB().First(&user, id).Error
+
+	return user, err
 }
 
-func (c *userPostgresRepository) FindByName(name string) entities.User {
+func (c *userPostgresRepository) FindByName(name string) (entities.User, error) {
 	var user entities.User
-	c.DB.DB().Where("name = ?", name).First(&user)
-	return user
+	err := c.db.DB().Where("name = ?", name).First(&user).Error
+	return user, err
 }

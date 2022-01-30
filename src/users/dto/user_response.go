@@ -8,12 +8,20 @@ type UserResponseBody struct {
 	Email string `json:"email"`
 }
 
+func ParseFromEntity(data entities.User) UserResponseBody {
+	return UserResponseBody{
+		ID:    data.ID,
+		Name:  data.Name,
+		Email: data.Email,
+	}
+}
+
 func ParseFromEntities(data []entities.User) []UserResponseBody {
 	var users []UserResponseBody
 
 	for _, d := range data {
 		user := UserResponseBody{
-			ID:    d.UserID,
+			ID:    d.ID,
 			Name:  d.Name,
 			Email: d.Email,
 		}

@@ -1,13 +1,14 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gofiber/fiber"
 	"github.com/unacorbatanegra/crud_api/internal/web"
 	"github.com/unacorbatanegra/crud_api/src/users/dto"
-	"github.com/unacorbatanegra/crud_api/src/users/entities"
+
 	"github.com/unacorbatanegra/crud_api/src/users/services"
 )
 
@@ -35,21 +36,27 @@ func (c *userHandler) GetAll(ctx *fiber.Ctx) {
 }
 
 func (c *userHandler) GetById(ctx *fiber.Ctx) {
-	var user entities.User
+
 	pid := ctx.Params("id")
 	id, err := strconv.ParseUint(pid, 10, 32)
 	if err != nil {
 		web.JsonResponse(ctx, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
-	user = c.UserService.GetById(uint(id))
+	user, err := c.UserService.GetById(uint(id))
+	if err != nil {
+		fmt.Println(err)
+	}
 	web.JsonResponse(ctx, http.StatusOK, "", user)
 }
 
 func (c *userHandler) FindByName(ctx *fiber.Ctx) {
-	var user entities.User
+
 	name := ctx.Params("name")
 
-	user = c.UserService.FindByName(name)
+	user, err := c.UserService.FindByName(name)
+	if err != nil {
+		fmt.Println(err)
+	}
 	web.JsonResponse(ctx, http.StatusOK, "", user)
 }
